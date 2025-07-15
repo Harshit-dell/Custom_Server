@@ -101,6 +101,7 @@ public class Main {
         int size=10;
         int totalbytes=size*1024*1024;
         byte[] buffer=new byte[1024];
+        //this will hold all 0 , so file will be array of byte with 0s as value
 
         String headers="HTTP/1.1 200 OK\r\n"+
                 "Content-Type: application/octet-stream\r\n" +
@@ -119,12 +120,19 @@ public class Main {
         output.flush();
     }
 
-    private static void handleShutdown(OutputStream out) throws IOException {
+ private static void handleShutdown(OutputStream out) throws IOException {
         respondText(out, 200, "Server is shutting down...");
-        System.out.println("Shutdown");
+        try{
+            Thread.sleep(1000);
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Shutdown Completed");
         isRunning.set(false);
         socket.close();
     }
+
 
     private static void welcome(OutputStream output) throws IOException {
         String message="Welcome to my custom httpServer";
@@ -136,6 +144,7 @@ public class Main {
                 message;
         output.write(response.getBytes());
         output.flush();
+        //output flush here to make the output clear from trash.That is data from before 
     }
 
     private static void respondText(OutputStream output,int code,String message) throws IOException {
@@ -146,5 +155,6 @@ public class Main {
                 message;
         output.write(response.getBytes());
         output.flush();
+        
     }
 }
